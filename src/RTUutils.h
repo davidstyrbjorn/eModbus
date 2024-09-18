@@ -57,7 +57,7 @@ static void prepareHardwareSerial(HardwareSerial& s, uint16_t bufferSize = 260) 
 }
 #endif
 
-protected:
+public:
 // Printable characters for ASCII protocol: 012345678ABCDEF
   static const char ASCIIwrite[];
   static const char ASCIIread[];
