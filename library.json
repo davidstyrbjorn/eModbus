@@ -23,47 +23,13 @@
     "url": "https://github.com/eModbus/eModbus",
     "branch": "master"
   },
-  "dependencies": [
-    {
-      "owner": "me-no-dev",
-      "name": "AsyncTCP",
-      "version": "*",
-      "platforms": ["espressif32"]
-    },
-    {
-      "owner": "me-no-dev",
-      "name": "ESPAsyncTCP",
-      "version": "*",
-      "platforms": ["espressif8266"]
-    },
-    {
-      "name": "Ethernet",
-      "version": "https://github.com/arduino-libraries/Ethernet.git",
-      "platforms": ["espressif32"]
-    }
-  ],
+  "dependencies": [],
   "export": {
-    "include":
-    [
-        "src/*.cpp",
-        "src/*.h",
-        "examples/*",
-        "Test/*",
-        ".gitignore",
-        "README.md",
-        "license.md",
-        "keywords.txt",
-        "library.properties",
-        "library.json"
-    ]
+    "include": ["src/*.cpp", "src/*.h", "examples/*", "Test/*", ".gitignore", "README.md", "license.md", "keywords.txt", "library.properties", "library.json"]
   },
   "frameworks": "arduino",
-  "platforms": [
-    "espressif32",
-    "espressif8266"
-  ],
-  "build":
-  {
+  "platforms": ["espressif32", "espressif8266"],
+  "build": {
     "lib_ldf_Mode": "deep+"
   }
 }
