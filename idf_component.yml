@@ -1,0 +1,3 @@
+dependencies:
+  AsyncTCP:
+    git: https://github.com/davidstyrbjorn/AsyncTCP.git

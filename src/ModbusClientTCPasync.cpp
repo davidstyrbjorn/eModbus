@@ -331,15 +331,21 @@ void ModbusClientTCPasync::onPoll() {
   // try to send whatever is waiting
   handleSendingQueue();
 
-  // next check if timeout has struck for oldest request
-  if (!rxQueue.empty()) {
-    RequestEntry* request = rxQueue.begin()->second;
-    if (millis() - request->sentTime > MTA_timeout) {
-      LOG_D("request timeouts (now:%lu-sent:%u)\n", millis(), request->sentTime);
-      // oldest element timeouts, call onError and clean up
-      if (onError) {
-        // Handle timeout error
-        onError(TIMEOUT, request->token);
+    // next check if timeout has struck for oldest request
+    if (!rxQueue.empty())
+    {
+      RequestEntry *request = rxQueue.begin()->second;
+      if (millis() - request->sentTime > MTA_timeout)
+      {
+        LOG_D("request timeouts (now:%lu-sent:%" PRIu32 ")\n ", millis(), request->sentTime);
+        // oldest element timeouts, call onError and clean up
+        if (onError)
+        {
+          // Handle timeout error
+          onError(TIMEOUT, request->token);
+        }
+        delete request;
+        rxQueue.erase(rxQueue.begin());
       }
       delete request;
       rxQueue.erase(rxQueue.begin());

@@ -1,8 +1,7 @@
 idf_build_get_property(__hack_component_targets __COMPONENT_TARGETS)
 
 list(APPEND EMODBUS_PRIV_REQUIRES
-    bblanchon__arduinojson
-    app_update
+    AsyncTCP
 )
 
 if("arduino" IN_LIST BUILD_COMPONENTS OR __hack_component_targets MATCHES "__idf_arduino")
@@ -21,16 +20,18 @@ endif()
 
 # List all the source files
 set(SRCS
-    "src/ModbusClient.cpp"
-    "src/ModbusClientRTU.cpp"
-    "src/ModbusClientTCP.cpp"
-    "src/ModbusMessage.cpp"
-    "src/ModbusServer.cpp"
-    "src/ModbusServerRTU.cpp"
-    "src/ModbusServerTCP.cpp"
-    "src/ModbusTypeDefs.cpp"
-    "src/CoilData.cpp"
-    "src/RTUutils.cpp"
+    src/CoilData.cpp
+    src/Logging.cpp
+    src/ModbusClient.cpp
+    src/ModbusClientRTU.cpp
+    src/ModbusClientTCPasync.cpp
+    src/ModbusClientTCP.cpp
+    src/ModbusMessage.cpp
+    src/ModbusServer.cpp
+    src/ModbusServerRTU.cpp
+    src/ModbusServerTCPasync.cpp
+    src/ModbusTypeDefs.cpp
+    src/RTUutils.cpp
 )
 
 # List all the include directories
