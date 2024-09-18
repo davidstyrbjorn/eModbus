@@ -350,7 +350,6 @@ void ModbusClientTCPasync::onPoll() {
       delete request;
       rxQueue.erase(rxQueue.begin());
     }
-  }
     
   }  // end lockguard scope
 
