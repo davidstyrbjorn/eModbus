@@ -270,7 +270,6 @@ ModbusMessage RTUutils::receive(uint8_t caller, Stream &serial,
           while (serial.available()) {
             // Yes, collect it
             buffer[bufferPtr++] = serial.read();
-            ESP_LOGI("RTUutils", "Received byte %02X", buffer[bufferPtr - 1]);
             // Mark time of last byte
             lastMicros = micros();
             // Buffer full?
