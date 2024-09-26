@@ -249,7 +249,6 @@ ModbusMessage RTUutils::receive(uint8_t caller, Stream &serial,
           if (b > 0 || !skipLeadingZeroBytes) {
             // No, we can go process it regularly
             buffer[bufferPtr++] = b;
-            ESP_LOGI("RTUutils", "Received byte %02X", b);
             state = IN_PACKET;
           }
         } else {
