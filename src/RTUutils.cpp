@@ -480,9 +480,7 @@ ModbusMessage RTUutils::receive(uint8_t caller, Stream &serial,
 
   LOG_D("%c/", (const char)caller);
   HEXDUMP_D("Received packet", rv.data(), rv.size());
-  if (LogRawMsg)
-
-    return rv;
+  return rv;
 }
 
 // Lower 7 bit ASCII characters - all invalid are set to 0xFF
