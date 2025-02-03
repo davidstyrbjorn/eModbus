@@ -12,6 +12,12 @@
 // #define LOCAL_LOG_LEVEL LOG_LEVEL_VERBOSE
 #include "Logging.h"
 
+namespace {
+constexpr const char *TAG = "RTUutils";
+bool LogCRC = false;
+bool LogRawMsg = false;
+} // namespace
+
 // calcCRC: calculate Modbus CRC16 on a given array of bytes
 uint16_t RTUutils::calcCRC(const uint8_t *data, uint16_t len) {
   // CRC16 pre-calculated tables
@@ -123,6 +129,11 @@ uint32_t RTUutils::calculateInterval(uint32_t baudRate) {
   return interval;
 }
 
+void RTUutils::logPrep(bool logCRC, bool logRawMsg) {
+  LogCRC = logCRC;
+  LogRawMsg = logRawMsg;
+}
+
 // send: send a message via Serial, watching interval times - including CRC!
 void RTUutils::send(Stream &serial, unsigned long &lastMicros,
                     uint32_t interval, RTScallback rts, const uint8_t *data,
@@ -167,6 +178,8 @@ void RTUutils::send(Stream &serial, unsigned long &lastMicros,
   } else {
     // RTU mode
     uint16_t crc16 = calcCRC(data, len);
+    if (LogCRC)
+      ESP_LOGI(TAG, "Recieved CRC: 0x%04X", crc16);
 
     // Respect interval - we must not toggle rtsPin before
     if (micros() - lastMicros < interval)
@@ -300,6 +313,10 @@ ModbusMessage RTUutils::receive(uint8_t caller, Stream &serial,
         HEXDUMP_V("Raw buffer received", buffer, bufferPtr);
         if (bufferPtr >= 4) {
           // Yes. Check CRC
+          if (LogCRC) {
+            uint16_t crc = buffer[bufferPtr - 2] | (buffer[bufferPtr - 1] << 8;
+            ESP_LOGI(TAG, "Recieved CRC: 0x%04X", crc16);
+          }
           if (!validCRC(buffer, bufferPtr)) {
             // Ooops. CRC is wrong.
             rv.push_back(CRC_ERROR);
@@ -463,8 +480,9 @@ ModbusMessage RTUutils::receive(uint8_t caller, Stream &serial,
 
   LOG_D("%c/", (const char)caller);
   HEXDUMP_D("Received packet", rv.data(), rv.size());
+  if (LogRawMsg)
 
-  return rv;
+    return rv;
 }
 
 // Lower 7 bit ASCII characters - all invalid are set to 0xFF
