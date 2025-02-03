@@ -179,7 +179,7 @@ void RTUutils::send(Stream &serial, unsigned long &lastMicros,
     // RTU mode
     uint16_t crc16 = calcCRC(data, len);
     if (LogCRC)
-      ESP_LOGI(TAG, "Recieved CRC: 0x%04X", crc16);
+      ESP_LOGI(TAG, "Sending CRC: 0x%04X", crc16);
 
     // Respect interval - we must not toggle rtsPin before
     if (micros() - lastMicros < interval)
