@@ -5,6 +5,7 @@
 // =================================================================================================
 #include "options.h"
 #if HAS_FREERTOS
+// #if 1
 #include "ModbusMessage.h"
 #include "RTUutils.h"
 #include <esp_log.h>
@@ -80,11 +81,12 @@ uint16_t RTUutils::calcCRC(const uint8_t *data, uint16_t len, int offset) {
   uint8_t crcHi = 0xFF;
   uint8_t crcLo = 0xFF;
 
-  *data += offset
-  len -= offset;
+  uint8_t _data[len-1];
+  memcpy(_data, data+1, len-1);
+  len -= 1;
 
   while (len--) {
-    uint8_t index = crcLo ^ *data++;
+    uint8_t index = crcLo ^ *_data++;
     crcLo = crcHi ^ crcHiTable[index];
     crcHi = crcLoTable[index];
   }
