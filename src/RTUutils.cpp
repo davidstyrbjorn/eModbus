@@ -81,7 +81,7 @@ uint16_t RTUutils::calcCRC(const uint8_t *data, uint16_t len, int offset) {
   uint8_t crcHi = 0xFF;
   uint8_t crcLo = 0xFF;
 
-  uint8_t _data[len-1];
+  uint8_t *_data = static_cast<uint8_t*>(malloc(len-1));
   memcpy(_data, data+1, len-1);
   len -= 1;
 
