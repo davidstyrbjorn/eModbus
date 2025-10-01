@@ -19,15 +19,6 @@ bool LogCRC = false;
 bool LogRawMsg = false;
 } // namespace
 
-uint16_t calcCRCTherataStyle(const uint8_t *data, uint16_t length) {
-  uint16_t ix, iy, crc;
-
-  uint8_t Rcvbuf[2] = {0, 0};
-
-  return crc;
-}
-
-// calcCRC: calculate Modbus CRC16 on a given array of bytes
 uint16_t RTUutils::calcCRC(const uint8_t *data, uint16_t len, int offset) {
   // CRC16 pre-calculated tables
   const uint8_t crcHiTable[] = {
