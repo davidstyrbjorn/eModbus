@@ -18,8 +18,16 @@ bool LogCRC = false;
 bool LogRawMsg = false;
 } // namespace
 
+uint16_t calcCRCTherataStyle(const uint8_t *data, uint16_t length) {
+  uint16_t ix, iy, crc;
+
+  uint8_t Rcvbuf[2] = {0, 0};
+
+  return crc;
+}
+
 // calcCRC: calculate Modbus CRC16 on a given array of bytes
-uint16_t RTUutils::calcCRC(const uint8_t *data, uint16_t len) {
+uint16_t RTUutils::calcCRC(const uint8_t *data, uint16_t len, int offset) {
   // CRC16 pre-calculated tables
   const uint8_t crcHiTable[] = {
       0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0, 0x80, 0x41,
@@ -71,6 +79,9 @@ uint16_t RTUutils::calcCRC(const uint8_t *data, uint16_t len) {
 
   uint8_t crcHi = 0xFF;
   uint8_t crcLo = 0xFF;
+
+  *data += offset
+  len -= offset;
 
   while (len--) {
     uint8_t index = crcLo ^ *data++;
@@ -137,7 +148,7 @@ void RTUutils::logPrep(bool logCRC, bool logRawMsg) {
 // send: send a message via Serial, watching interval times - including CRC!
 void RTUutils::send(Stream &serial, unsigned long &lastMicros,
                     uint32_t interval, RTScallback rts, const uint8_t *data,
-                    uint16_t len, bool ASCIImode) {
+                    uint16_t len, bool ASCIImode, int offset) {
   // Clear serial buffers
   while (serial.available())
     serial.read();
@@ -177,7 +188,7 @@ void RTUutils::send(Stream &serial, unsigned long &lastMicros,
     rts(LOW);
   } else {
     // RTU mode
-    uint16_t crc16 = calcCRC(data, len);
+    uint16_t crc16 = calcCRC(data, len, offset);
     if (LogCRC)
       ESP_LOGI(TAG, "Sending CRC: 0x%04X", crc16);
 
@@ -206,8 +217,8 @@ void RTUutils::send(Stream &serial, unsigned long &lastMicros,
 // send: send a message via Serial, watching interval times - including CRC!
 void RTUutils::send(Stream &serial, unsigned long &lastMicros,
                     uint32_t interval, RTScallback rts, ModbusMessage raw,
-                    bool ASCIImode) {
-  send(serial, lastMicros, interval, rts, raw.data(), raw.size(), ASCIImode);
+                    bool ASCIImode, int offset) {
+  send(serial, lastMicros, interval, rts, raw.data(), raw.size(), ASCIImode, offset);
 }
 
 // receive: get (any) message from Serial, taking care of timeout and interval

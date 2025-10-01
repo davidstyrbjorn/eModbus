@@ -24,7 +24,7 @@ public:
   friend class ModbusServerRTU;
 
   // calcCRC: calculate the CRC16 value for a given block of data
-  static uint16_t calcCRC(const uint8_t *data, uint16_t len);
+  static uint16_t calcCRC(const uint8_t *data, uint16_t len, int offset = 0);
 
   // calcCRC: calculate the CRC16 value for a given block of data
   static uint16_t calcCRC(ModbusMessage msg);
@@ -77,9 +77,9 @@ public:
   // data/len)
   static void send(Stream &serial, unsigned long &lastMicros, uint32_t interval,
                    RTScallback r, const uint8_t *data, uint16_t len,
-                   bool ASCIImode);
+                   bool ASCIImode, int offset = 0);
   static void send(Stream &serial, unsigned long &lastMicros, uint32_t interval,
-                   RTScallback r, ModbusMessage raw, bool ASCIImode);
+                   RTScallback r, ModbusMessage raw, bool ASCIImode, int offset = 0);
 };
 
 #endif
