@@ -30,10 +30,10 @@ public:
   static uint16_t calcCRC(ModbusMessage msg);
 
   // validCRC #1: check the CRC in a block of data for validity
-  static bool validCRC(const uint8_t *data, uint16_t len);
+  static bool validCRC(const uint8_t *data, uint16_t len, int offset = 0);
 
   // validCRC #2: check the CRC of a block of data against a given one
-  static bool validCRC(const uint8_t *data, uint16_t len, uint16_t CRC);
+  static bool validCRC(const uint8_t *data, uint16_t len, uint16_t CRC, int offset = 0);
 
   // validCRC #1: check the CRC in a message for validity
   static bool validCRC(ModbusMessage msg);
@@ -70,7 +70,7 @@ public:
   static ModbusMessage receive(uint8_t caller, Stream &serial, uint32_t timeout,
                                unsigned long &lastMicros, uint32_t interval,
                                bool ASCIImode,
-                               bool skipLeadingZeroBytes = false);
+                               bool skipLeadingZeroBytes = false, int offset = 0);
 
   static void logPrep(bool logCRC = false, bool logRawMsg = false);
   // send: send a Modbus message in either format (ModbusMessage or

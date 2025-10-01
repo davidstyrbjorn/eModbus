@@ -90,14 +90,14 @@ uint16_t RTUutils::calcCRC(ModbusMessage msg) {
 }
 
 // validCRC #1: check the given CRC in a block of data for correctness
-bool RTUutils::validCRC(const uint8_t *data, uint16_t len) {
-  return validCRC(data, len - 2, data[len - 2] | (data[len - 1] << 8));
+bool RTUutils::validCRC(const uint8_t *data, uint16_t len, int offset) {
+  return validCRC(data, len - 2, data[len - 2] | (data[len - 1] << 8), offset);
 }
 
 // validCRC #2: check the CRC of a block of data against a given one for
 // equality
-bool RTUutils::validCRC(const uint8_t *data, uint16_t len, uint16_t CRC) {
-  uint16_t crc16 = calcCRC(data, len);
+bool RTUutils::validCRC(const uint8_t *data, uint16_t len, uint16_t CRC, int offset) {
+  uint16_t crc16 = calcCRC(data, len, offset);
   if (CRC == crc16)
     return true;
   return false;
@@ -218,7 +218,7 @@ void RTUutils::send(Stream &serial, unsigned long &lastMicros,
 ModbusMessage RTUutils::receive(uint8_t caller, Stream &serial,
                                 uint32_t timeout, unsigned long &lastMicros,
                                 uint32_t interval, bool ASCIImode,
-                                bool skipLeadingZeroBytes) {
+                                bool skipLeadingZeroBytes, int offset) {
   // Allocate initial receive buffer size: 1 block of BUFBLOCKSIZE bytes
   const uint16_t BUFBLOCKSIZE(512);
   uint8_t *buffer = new uint8_t[BUFBLOCKSIZE];
