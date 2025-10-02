@@ -321,7 +321,7 @@ ModbusMessage RTUutils::receive(uint8_t caller, Stream &serial,
             uint16_t crc = buffer[bufferPtr - 2] | (buffer[bufferPtr - 1] << 8);
             ESP_LOGI(TAG, "Recieved CRC: 0x%04X", crc);
           }
-          if (!validCRC(buffer, bufferPtr)) {
+          if (!validCRC(buffer, bufferPtr, offset)) {
             // Ooops. CRC is wrong.
             rv.push_back(CRC_ERROR);
           } else {
