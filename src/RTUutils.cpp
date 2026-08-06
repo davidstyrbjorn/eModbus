@@ -9,6 +9,8 @@
 #include "ModbusMessage.h"
 #include "RTUutils.h"
 #include <esp_log.h>
+#include <iomanip>
+#include <sstream>
 #undef LOCAL_LOG_LEVEL
 // #define LOCAL_LOG_LEVEL LOG_LEVEL_VERBOSE
 #include "Logging.h"
