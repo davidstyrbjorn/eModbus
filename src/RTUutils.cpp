@@ -80,7 +80,7 @@ uint16_t RTUutils::calcCRC(const uint8_t *data, uint16_t len, int offset) {
     crcLo = crcHi ^ crcHiTable[index];
     crcHi = crcLoTable[index];
   }
-  
+
   return (crcHi << 8 | crcLo);
 }
 
@@ -96,7 +96,8 @@ bool RTUutils::validCRC(const uint8_t *data, uint16_t len, int offset) {
 
 // validCRC #2: check the CRC of a block of data against a given one for
 // equality
-bool RTUutils::validCRC(const uint8_t *data, uint16_t len, uint16_t CRC, int offset) {
+bool RTUutils::validCRC(const uint8_t *data, uint16_t len, uint16_t CRC,
+                        int offset) {
   uint16_t crc16 = calcCRC(data, len, offset);
   if (CRC == crc16)
     return true;
@@ -136,6 +137,29 @@ uint32_t RTUutils::calculateInterval(uint32_t baudRate) {
 void RTUutils::logPrep(bool logCRC, bool logRawMsg) {
   LogCRC = logCRC;
   LogRawMsg = logRawMsg;
+}
+
+template <typename T>
+void printArray(const char *name, const T *data, size_t length,
+                bool isDebug = false) {
+  std::stringstream ss;
+  ss << std::hex << std::setfill('0');
+
+  for (size_t i = 0; i < length; ++i) {
+    ss << std::setw(2) << static_cast<int>(data[i]);
+    if (i < length - 1) {
+      ss << " ";
+    }
+  }
+
+  ss << " XX XX";
+  if (isDebug) {
+    ESP_LOGD("UTIL", "Array content of %s (%u bytes): %s", name, length,
+             ss.str().c_str());
+  } else {
+    ESP_LOGI("UTIL", "Array content of %s (%u bytes): %s", name, length,
+             ss.str().c_str());
+  }
 }
 
 // send: send a message via Serial, watching interval times - including CRC!
@@ -201,7 +225,7 @@ void RTUutils::send(Stream &serial, unsigned long &lastMicros,
     rts(LOW);
   }
 
-  HEXDUMP_D("Sent packet", data, len);
+  printArray("send ->", data, len);
 
   // Mark end-of-message time for next interval
   lastMicros = micros();
@@ -211,7 +235,8 @@ void RTUutils::send(Stream &serial, unsigned long &lastMicros,
 void RTUutils::send(Stream &serial, unsigned long &lastMicros,
                     uint32_t interval, RTScallback rts, ModbusMessage raw,
                     bool ASCIImode, int offset) {
-  send(serial, lastMicros, interval, rts, raw.data(), raw.size(), ASCIImode, offset);
+  send(serial, lastMicros, interval, rts, raw.data(), raw.size(), ASCIImode,
+       offset);
 }
 
 // receive: get (any) message from Serial, taking care of timeout and interval
@@ -480,10 +505,11 @@ ModbusMessage RTUutils::receive(uint8_t caller, Stream &serial,
     }
   }
   // Deallocate buffer
+  printArray("send ->", rv.data(), rv.size());
   delete[] buffer;
 
   LOG_D("%c/", (const char)caller);
-  HEXDUMP_D("Received packet", rv.data(), rv.size());
+
   return rv;
 }
 
